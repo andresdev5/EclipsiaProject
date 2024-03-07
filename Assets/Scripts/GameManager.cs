@@ -21,8 +21,6 @@ public class GameManager : MonoBehaviour
     public PlayerStatus PlayerStatus { get; set; } = new PlayerStatus();
     public GameStatus GameStatus { get; set; } = new GameStatus();
 
-    [SerializeField] public GameObject LoadingScreen;
-
     public bool IsFinished { get; set; } = false;
 
     private void Awake()
@@ -37,6 +35,11 @@ public class GameManager : MonoBehaviour
 
         Instance = this;
         DontDestroyOnLoad(gameObject);
+    }
+
+    public GameObject GetLoadingScreen()
+    {
+        return GameObject.Find("LoadingScreen");
     }
 
     public void Pause()
@@ -74,12 +77,32 @@ public class GameManager : MonoBehaviour
         IsFinished = true;
     }
 
+    public void ShowLoadingScreen()
+    {
+        Animator loadingScreenAnimator = GetLoadingScreen().GetComponent<Animator>();
+        loadingScreenAnimator.SetTrigger("FadeIn");
+    }
+
+    public void GameOver()
+    {
+        Animator loadingScreenAnimator = GetLoadingScreen().GetComponent<Animator>();
+        loadingScreenAnimator.SetTrigger("FadeIn");
+        StartCoroutine(LoadMainMenu());
+    }
+
     public void NextLevel()
     {
-        Animator loadingScreenAnimator = LoadingScreen.GetComponent<Animator>();
+        Animator loadingScreenAnimator = GetLoadingScreen().GetComponent<Animator>();
         loadingScreenAnimator.SetTrigger("FadeIn");
 
         StartCoroutine(LoadNextLevel());
+    }
+
+    private IEnumerator LoadMainMenu()
+    {
+        yield return new WaitForSeconds(3.0f);
+        UnityEngine.SceneManagement.SceneManager.UnloadSceneAsync(string.Format("Level{0}", GameStatus.Level));
+        UnityEngine.SceneManagement.SceneManager.LoadScene("MainMenu");
     }
 
     private IEnumerator LoadNextLevel()

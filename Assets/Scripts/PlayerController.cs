@@ -58,6 +58,8 @@ public class PlayerController : MonoBehaviour
         bool grounding = collider2D.IsTouchingLayers(LayerMask.GetMask("Ground"));
         movement = new Vector2(Input.GetAxis("Horizontal"), 0).normalized;
 
+        if (GameManager.Instance.PlayerStatus.Health <= 0) return;
+
         if (GameManager.Instance.GameStatus.IsPaused) return;
 
         if (Input.GetKeyDown(KeyCode.Z))
@@ -105,6 +107,9 @@ public class PlayerController : MonoBehaviour
     private void FixedUpdate()
     {
         if (GameManager.Instance.IsFinished) return;
+
+        if (GameManager.Instance.PlayerStatus.Health <= 0) return;
+
 
         if (movement.x != 0)
         {
@@ -193,6 +198,7 @@ public class PlayerController : MonoBehaviour
     private void OnCollisionEnter2D(Collision2D collision)
     {
         if (GameManager.Instance.IsFinished) return;
+        if (GameManager.Instance.PlayerStatus.Health <= 0) return;
 
         if (collision.gameObject.CompareTag("NextLevelPoint"))
         {
@@ -207,6 +213,8 @@ public class PlayerController : MonoBehaviour
 
     private void onHitEnemyLevel1(Collision2D collision)
     {
+        if (GameManager.Instance.PlayerStatus.Health <= 0) return;
+
         if (collision.gameObject.CompareTag("Enemy"))
         {
             //SkullEnemy enemy = collision.gameObject.GetComponent<SkullEnemy>();
@@ -244,7 +252,7 @@ public class PlayerController : MonoBehaviour
             if (GameManager.Instance.PlayerStatus.Health <= 0)
             {
                 animator.SetTrigger("Die");
-                StartCoroutine(GoNextLevel());
+                GameManager.Instance.GameOver();
             }
         }
     }
@@ -285,7 +293,7 @@ public class PlayerController : MonoBehaviour
         if (GameManager.Instance.PlayerStatus.Health <= 0)
         {
             animator.SetTrigger("Die");
-            StartCoroutine(GoNextLevel());
+            GameManager.Instance.GameOver();
         }
     }
 

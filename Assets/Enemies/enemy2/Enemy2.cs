@@ -100,9 +100,17 @@ public class Enemy2 : MonoBehaviour
         if (health <= 0)
         {
             m_animator.SetTrigger("Die");
+
+            if (GetComponent<PolygonCollider2D> () != null)
             GetComponent<PolygonCollider2D>().enabled = false;
+
+            if (GetComponent<BoxCollider2D> () != null)
             GetComponent<Rigidbody2D>().gravityScale = 0;
+
+            if (GetComponent<Rigidbody2D> () != null)
             rigidBody2D.velocity = Vector2.zero;
+
+            GetComponent<BoxCollider2D>().enabled = false;
         }
 
         StartCoroutine(TintEnemy());

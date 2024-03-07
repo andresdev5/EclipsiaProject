@@ -14,4 +14,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/DontDestroyOnLoad.unity
     guid: 41f101cc5939c2142a7b9e10d185cd1a
+  - enabled: 1
+    path: Assets/Scenes/MainMenu.unity
+    guid: 7f91ae9491b5bc147a3ff24aff3fa767
   m_configObjects: {}
